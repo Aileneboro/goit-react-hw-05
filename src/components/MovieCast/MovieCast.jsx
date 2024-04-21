@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import css from "./MovieCast.module.css";
 
 const MovieCast = ({ options }) => {
   const [movieCast, setMovieCast] = useState([]);
@@ -27,16 +28,17 @@ const MovieCast = ({ options }) => {
   }, [movieId, options]);
 
   return (
-    <>
+    <div>
       {movieCast && movieCast.length > 0 ? (
-        <ul>
+        <ul className={css.castList}>
           {movieCast.map((actor) => (
-            <li key={actor.credit_id}>
+            <li className={css.castItem} key={actor.credit_id}>
               <img
+                className={css.castImage}
                 src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
                 alt={actor.name}
               />
-              <h4>Name: {actor.name}</h4>
+              <h4> {actor.name}</h4>
               <h4>Character: {actor.character}</h4>
             </li>
           ))}
@@ -44,7 +46,7 @@ const MovieCast = ({ options }) => {
       ) : (
         <p>There is a problem with the actors cast.</p>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,24 @@
+.movieWrapp {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.movieInfo {
+  display: block;
+  padding-top: 200px;
+  font-size: 25px;
+}
+
+.addInfo {
+  flex-direction: row;
+  gap: 100px;
+  margin-top: 50px;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.addWrap {
+  display: block;
+  text-align: justify;
+}

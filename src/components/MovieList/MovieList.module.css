@@ -1,0 +1,24 @@
+.movieList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.movieItem {
+  width: calc((100% - 3 * 25px) / 4);
+  color: #000;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  object-fit: cover;
+  color: azure;
+  font-size: 16px;
+  text-align: center;
+}
+
+.movieImage {
+  height: 450px;
+  width: 100%;
+  object-fit: cover;
+}

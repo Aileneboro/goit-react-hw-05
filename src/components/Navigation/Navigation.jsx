@@ -4,10 +4,15 @@ const Navigation = () => {
   return (
     <header>
       <nav>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/movies">Movies</NavLink>
+        <NavLink exact="true" to="/" activeclassname="active">
+          Home
+        </NavLink>
+        <NavLink to="/movies" activeclassname="active">
+          Movies
+        </NavLink>
       </nav>
     </header>
   );
 };
+
 export default Navigation;

@@ -1,0 +1,15 @@
+.castList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.castItem {
+  width: calc((100% - 4 * 30px) / 5);
+  text-align: center;
+}
+.castImage {
+  object-fit: cover;
+  height: 350px;
+}
