@@ -27,14 +27,18 @@ const MovieReviews = ({ options }) => {
   return (
     <div>
       <h3>Movie Reviews</h3>
-      <ul>
-        {reviews.map((review) => (
-          <li key={review.id}>
-            <h4>Author: {review.author}</h4>
-            <p>{review.content}</p>
-          </li>
-        ))}
-      </ul>
+      {reviews.length === 0 ? (
+        <p>We dont have any reviews for this movie.</p>
+      ) : (
+        <ul>
+          {reviews.map((review) => (
+            <li key={review.id}>
+              <h4>Author: {review.author}</h4>
+              <p>{review.content}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
