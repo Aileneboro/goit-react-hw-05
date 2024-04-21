@@ -1,9 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "../../pages/HomePage/HomePage";
-import MoviesPage from "../../pages/MoviesPage/MoviesPage";
-import MovieDetailsPage from "../../pages/MovieDetailsPage/MovieDetailsPage";
+import { lazy, Suspense } from "react";
 import NotFoundPage from "../../pages/NotFoundPage/NotFoundPage";
 import Navigation from "../Navigation/Navigation";
+
+const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
+const MovieDetailsPage = lazy(() =>
+  import("../../pages/MovieDetailsPage/MovieDetailsPage")
+);
+const MoviesPage = lazy(() => import("../../pages/MoviesPage/MoviesPage"));
+const MovieCast = lazy(() => import("../MovieCast/MovieCast"));
+const MovieReviews = lazy(() => import("../MovieReviews/MovieReviews"));
 
 const App = () => {
   const options = {
@@ -17,15 +23,33 @@ const App = () => {
   return (
     <div>
       <Navigation />
-      <Routes>
-        <Route path="/" element={<HomePage options={options} />} />
-        <Route path="/movies" element={<MoviesPage options={options} />} />
-        <Route
-          path="/movies/:movieId/*"
-          element={<MovieDetailsPage options={options} />}
-        />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Suspense fallback={<div>Loading page...</div>}>
+        <Routes>
+          <Route path="/" element={<HomePage options={options} />} />
+          <Route path="/movies" element={<MoviesPage options={options} />} />
+          <Route
+            path="/movies/:movieId/*"
+            element={<MovieDetailsPage options={options} />}
+          />
+          <Route
+            path="/movies/:movieId/cast"
+            element={
+              <MovieDetailsPage options={options}>
+                <MovieCast options={options} />
+              </MovieDetailsPage>
+            }
+          />
+          <Route
+            path="/movies/:movieId/reviews"
+            element={
+              <MovieDetailsPage options={options}>
+                <MovieReviews options={options} />
+              </MovieDetailsPage>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };

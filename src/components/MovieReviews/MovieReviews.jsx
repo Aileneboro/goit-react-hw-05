@@ -30,7 +30,7 @@ const MovieReviews = ({ options }) => {
       <ul>
         {reviews.map((review) => (
           <li key={review.id}>
-            <p>Author: {review.author}</p>
+            <h4>Author: {review.author}</h4>
             <p>{review.content}</p>
           </li>
         ))}

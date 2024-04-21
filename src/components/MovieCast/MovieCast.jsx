@@ -32,8 +32,12 @@ const MovieCast = ({ options }) => {
         <ul>
           {movieCast.map((actor) => (
             <li key={actor.credit_id}>
-              <p>Name: {actor.name}</p>
-              <p>Character: {actor.character}</p>
+              <img
+                src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
+                alt={actor.name}
+              />
+              <h4>Name: {actor.name}</h4>
+              <h4>Character: {actor.character}</h4>
             </li>
           ))}
         </ul>

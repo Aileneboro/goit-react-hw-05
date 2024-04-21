@@ -4,8 +4,8 @@ const Navigation = () => {
   return (
     <header>
       <nav>
-        <NavLink to="/">HomePage</NavLink>
-        <NavLink to="/movies">MoviesPage</NavLink>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/movies">Movies</NavLink>
       </nav>
     </header>
   );

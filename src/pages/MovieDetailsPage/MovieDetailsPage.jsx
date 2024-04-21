@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link, useLocation } from "react-router-dom";
-import MovieCast from "../../components/MovieCast/MovieCast";
-import MovieReviews from "../../components/MovieReviews/MovieReviews";
+import { useParams, NavLink } from "react-router-dom";
 
-const MovieDetailsPage = ({ options }) => {
+const MovieDetailsPage = ({ options, children }) => {
   const { movieId } = useParams();
   const [movieData, setMovieData] = useState({});
-  const location = useLocation();
-  const backLink = location.state?.from ?? "/";
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
-        options
-      );
-      setMovieData(response.data);
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
+          options
+        );
+        setMovieData(response.data);
+      } catch (error) {
+        console.error("Error fetching movie details:", error);
+      }
     };
 
     if (movieId) {
@@ -24,37 +24,37 @@ const MovieDetailsPage = ({ options }) => {
     }
   }, [movieId, options]);
 
-  const defaultImg =
-    "https://dl-media.viber.com/10/share/2/long/vibes/icon/image/0x0/95e0/5688fdffb84ff8bed4240bcf3ec5ac81ce591d9fa9558a3a968c630eaba195e0.jpg";
+  const handleGoBack = () => {
+    window.history.back();
+  };
 
   return (
     <div>
-      <Link to={backLink}>Go Back</Link>
-      <h2>{movieData.title}</h2>
-      <img
-        src={
-          movieData.poster_path
-            ? `https://image.tmdb.org/t/p/w500/${movieData.poster_path}`
-            : defaultImg
-        }
-        alt="poster"
-      />
-      <p>Release Date: {movieData.release_date}</p>
-      <p>Overview: {movieData.overview}</p>
-      <p>Rating: {movieData.vote_average}</p>
-      <p>
-        Genres:{" "}
-        {movieData.genres &&
-          movieData.genres.map((genre) => genre.name).join(", ")}
-      </p>
       <div>
-        <Link to={`/movies/${movieId}/cast`}>Movie Cast</Link>
-        <Link to={`/movies/${movieId}/reviews`}>Movie Reviews</Link>
+        <button onClick={handleGoBack}>Go Back</button>
+        <h2>{movieData.title}</h2>
+        <img
+          src={`https://image.tmdb.org/t/p/w500/${movieData.poster_path}`}
+          alt="poster"
+        />
+        <p>Release Date: {movieData.release_date}</p>
+        <p>Overview: {movieData.overview}</p>
+        <p>Rating: {movieData.vote_average}</p>
+        <p>
+          Genres:{" "}
+          {movieData.genres &&
+            movieData.genres.map((genre) => genre.name).join(", ")}
+        </p>
+        <div>
+          <NavLink to={`/movies/${movieId}/cast`}>
+            <p>Cast</p>
+          </NavLink>
+          <NavLink to={`/movies/${movieId}/reviews`}>
+            <p>Reviews</p>
+          </NavLink>
+        </div>
       </div>
-      <div>
-        <MovieCast movieId={movieId} options={options} />
-        <MovieReviews movieId={movieId} options={options} />
-      </div>
+      {children}
     </div>
   );
 };
