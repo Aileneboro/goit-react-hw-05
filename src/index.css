@@ -38,7 +38,7 @@ h3 {
 
 p {
   margin: 0;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
 
 input {
@@ -47,20 +47,21 @@ input {
   border-radius: 4px;
   background: #fff;
   border-radius: 4px;
-  border: 1px solid #808080;
-  color: #808080;
-  font-family: Montserrat;
-  font-size: 16px;
+  border: 1px solid rgba(11, 13, 82, 1);
+  color: black;
+  font-family: inherit;
+  font-size: 20px;
   line-height: 1.5;
   letter-spacing: 0.02em;
-  padding-left: 16px;
+  padding-left: 20px;
 }
 
 input:hover {
-  border: 1px solid #000;
+  border: 1px solid rgb(243, 39, 39);
 }
 
 button {
+  margin-top: 10px;
   margin-left: 8px;
   display: inline-flex;
   padding: 8px 16px;
@@ -72,7 +73,7 @@ button {
   border: 1px solid azure;
   color: #fff;
   font-family: Montserrat;
-  font-size: 16px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: 1.5;
