@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import MovieList from "../../components/MovieList/MovieList";
 
@@ -7,24 +7,40 @@ const MoviesPage = ({ options }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchMessage, setSearchMessage] = useState("");
 
+  useEffect(() => {
+    const savedResults = JSON.parse(localStorage.getItem("searchResults"));
+    if (savedResults) {
+      setSearchResults(savedResults);
+    }
+  }, []);
+
   const handleSearch = async () => {
+    localStorage.removeItem("searchResults");
     if (searchTerm.trim() === "") {
       setSearchResults([]);
       setSearchMessage("Please enter a search query.");
       return;
     }
 
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1`,
-      options
-    );
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1`,
+        options
+      );
 
-    if (response.data.results.length === 0) {
-      setSearchResults([]);
-      setSearchMessage("No results found.");
-    } else {
-      setSearchResults(response.data.results);
-      setSearchMessage("");
+      if (response.data.results.length === 0) {
+        setSearchResults([]);
+        setSearchMessage("No results found.");
+      } else {
+        setSearchResults(response.data.results);
+        setSearchMessage("");
+        localStorage.setItem(
+          "searchResults",
+          JSON.stringify(response.data.results)
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching search results:", error);
     }
 
     setSearchTerm("");

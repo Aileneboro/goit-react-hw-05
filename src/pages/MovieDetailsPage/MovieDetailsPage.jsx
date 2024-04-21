@@ -7,6 +7,9 @@ const MovieDetailsPage = ({ options, children }) => {
   const [movieData, setMovieData] = useState({});
 
   useEffect(() => {
+    // Зберігання інформації про відкриту сторінку фільму у локальному сховищі
+    localStorage.setItem("lastMovieId", movieId);
+
     const fetchMovieDetails = async () => {
       try {
         const response = await axios.get(
@@ -27,6 +30,13 @@ const MovieDetailsPage = ({ options, children }) => {
   const handleGoBack = () => {
     window.history.back();
   };
+
+  useEffect(() => {
+    // Очищення локального сховища при переході на іншу сторінку
+    return () => {
+      localStorage.removeItem("lastMovieId");
+    };
+  }, []);
 
   return (
     <div>
