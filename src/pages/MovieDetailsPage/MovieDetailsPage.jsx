@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useLocation } from "react-router-dom";
+import GoBack from "../../components/Navigation/GoBack";
 
 const MovieDetailsPage = ({ options, children }) => {
   const { movieId } = useParams();
   const [movieData, setMovieData] = useState({});
+  const location = useLocation();
+  let backLinkHref = useRef(location.state ?? "/movies");
 
   useEffect(() => {
-    // Зберігання інформації про відкриту сторінку фільму у локальному сховищі
-    localStorage.setItem("lastMovieId", movieId);
-
     const fetchMovieDetails = async () => {
       try {
         const response = await axios.get(
@@ -27,21 +27,10 @@ const MovieDetailsPage = ({ options, children }) => {
     }
   }, [movieId, options]);
 
-  const handleGoBack = () => {
-    window.history.back();
-  };
-
-  useEffect(() => {
-    // Очищення локального сховища при переході на іншу сторінку
-    return () => {
-      localStorage.removeItem("lastMovieId");
-    };
-  }, []);
-
   return (
     <div>
       <div>
-        <button onClick={handleGoBack}>Go Back</button>
+        <GoBack to={backLinkHref.current}>Go back</GoBack>
         <h2>{movieData.title}</h2>
         <img
           src={`https://image.tmdb.org/t/p/w500/${movieData.poster_path}`}
