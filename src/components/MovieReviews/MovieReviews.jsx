@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const MovieReviews = ({ options }) => {
+const MovieReviews = () => {
   const [reviews, setReviews] = useState([]);
   const { movieId } = useParams();
 
@@ -11,7 +11,13 @@ const MovieReviews = ({ options }) => {
       try {
         const response = await axios.get(
           `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US`,
-          options
+          {
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyN2E1NTk3OTYzMDQ5Y2IxNjVlOWZjMjkyMDc1ZmMwZCIsInN1YiI6IjY2MjI3NjA2MGQxMWYyMDE2NDAyMmFmNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OzFWnDU3Z5NIS742jPFk-1hzwxazE0JJYR2XM_CyvO8",
+            },
+          }
         );
         setReviews(response.data.results);
       } catch (error) {
@@ -22,7 +28,7 @@ const MovieReviews = ({ options }) => {
     if (movieId) {
       fetchReviews();
     }
-  }, [movieId, options]);
+  }, [movieId]);
 
   return (
     <div>
