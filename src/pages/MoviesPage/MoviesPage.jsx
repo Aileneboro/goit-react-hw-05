@@ -1,21 +1,18 @@
-// MoviesPage.js
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import MovieList from "../../components/MovieList/MovieList";
+import { useSearchParams } from "react-router-dom";
 
 const MoviesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchMessage, setSearchMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async (searchTerm) => {
     localStorage.removeItem("searchResults");
-    if (searchTerm.trim() === "") {
-      setSearchResults([]);
-      setSearchMessage("Please enter a search query.");
-      return;
-    }
-
+    setLoading(true);
     try {
       const response = await axios.get(
         `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1`,
@@ -27,7 +24,6 @@ const MoviesPage = () => {
           },
         }
       );
-
       if (response.data.results.length === 0) {
         setSearchResults([]);
         setSearchMessage("No results found.");
@@ -37,28 +33,48 @@ const MoviesPage = () => {
       }
     } catch (error) {
       console.error("Error fetching search results:", error);
+      setSearchResults([]);
+      setSearchMessage(
+        "Error fetching search results. Please try again later."
+      );
     }
+    setLoading(false);
+  }, []);
 
-    setSearchTerm("");
+  useEffect(() => {
+    const query = searchParams.get("query");
+    if (query) {
+      setSearchTerm(query);
+      handleSearch(query);
+    }
+  }, [searchParams, handleSearch]);
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    setSearchParams({ query: searchTerm });
+    handleSearch(searchTerm);
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      handleSearch();
+      handleSearch(searchTerm);
     }
   };
 
   return (
     <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-      <button onClick={handleSearch}>Search</button>
+      <form onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={handleKeyPress}
+        />
+        <button type="submit">Search</button>
+      </form>
       <h2>Search Results</h2>
-      {searchMessage && <p>{searchMessage}</p>}
+      {loading && <p>Loading...</p>}
+      {!loading && searchMessage && <p>{searchMessage}</p>}
       <MovieList movies={searchResults} />
     </div>
   );
