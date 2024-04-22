@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import MovieList from "../../components/MovieList/MovieList";
 import { useSearchParams } from "react-router-dom";
@@ -10,7 +10,7 @@ const MoviesPage = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleSearch = useCallback(async (searchTerm) => {
+  const handleSearch = async (searchTerm) => {
     localStorage.removeItem("searchResults");
     setLoading(true);
     try {
@@ -39,7 +39,7 @@ const MoviesPage = () => {
       );
     }
     setLoading(false);
-  }, []);
+  };
 
   useEffect(() => {
     const query = searchParams.get("query");
@@ -47,18 +47,12 @@ const MoviesPage = () => {
       setSearchTerm(query);
       handleSearch(query);
     }
-  }, [searchParams, handleSearch]);
+  }, [searchParams]);
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
     setSearchParams({ query: searchTerm });
-    handleSearch(searchTerm);
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch(searchTerm);
-    }
+    await handleSearch(searchTerm);
   };
 
   return (
@@ -68,7 +62,6 @@ const MoviesPage = () => {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={handleKeyPress}
         />
         <button type="submit">Search</button>
       </form>
