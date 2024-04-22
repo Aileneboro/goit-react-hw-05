@@ -59,8 +59,8 @@ const MovieDetailsPage = () => {
               movieData.genres.map((genre) => genre.name).join(", ")}
           </p>
           <div className={css.addInfo}>
-            <NavLink to={`/movies/${movieId}/cast`}>Cast</NavLink>
-            <NavLink to={`/movies/${movieId}/reviews`}>Reviews</NavLink>
+            <NavLink to="cast">Cast</NavLink>
+            <NavLink to="reviews">Reviews</NavLink>
           </div>
         </div>
       </div>
