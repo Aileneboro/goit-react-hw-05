@@ -10,6 +10,14 @@ const MoviesPage = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  useEffect(() => {
+    const query = searchParams.get("query");
+    if (query) {
+      setSearchTerm(query);
+      handleSearch(query);
+    }
+  }, [searchParams]);
+
   const handleSearch = async (searchTerm) => {
     localStorage.removeItem("searchResults");
     setLoading(true);
@@ -40,14 +48,6 @@ const MoviesPage = () => {
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    const query = searchParams.get("query");
-    if (query) {
-      setSearchTerm(query);
-      handleSearch(query);
-    }
-  }, [searchParams]);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
