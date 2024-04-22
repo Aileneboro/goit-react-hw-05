@@ -11,6 +11,36 @@ const MoviesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
+    const handleSearch = async (term) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?query=${term}&include_adult=false&language=en-US&page=1`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyN2E1NTk3OTYzMDQ5Y2IxNjVlOWZjMjkyMDc1ZmMwZCIsInN1YiI6IjY2MjI3NjA2MGQxMWYyMDE2NDAyMmFmNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OzFWnDU3Z5NIS742jPFk-1hzwxazE0JJYR2XM_CyvO8",
+            },
+          }
+        );
+        if (response.data.results.length === 0) {
+          setSearchResults([]);
+          setSearchMessage("No results found.");
+        } else {
+          setSearchResults(response.data.results);
+          setSearchMessage("");
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResults([]);
+        setSearchMessage(
+          "Error fetching search results. Please try again later."
+        );
+      }
+      setLoading(false);
+    };
+
     const query = searchParams.get("query");
     if (query) {
       setSearchTerm(query);
@@ -18,41 +48,9 @@ const MoviesPage = () => {
     }
   }, [searchParams]);
 
-  const handleSearch = async (searchTerm) => {
-    localStorage.removeItem("searchResults");
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyN2E1NTk3OTYzMDQ5Y2IxNjVlOWZjMjkyMDc1ZmMwZCIsInN1YiI6IjY2MjI3NjA2MGQxMWYyMDE2NDAyMmFmNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OzFWnDU3Z5NIS742jPFk-1hzwxazE0JJYR2XM_CyvO8",
-          },
-        }
-      );
-      if (response.data.results.length === 0) {
-        setSearchResults([]);
-        setSearchMessage("No results found.");
-      } else {
-        setSearchResults(response.data.results);
-        setSearchMessage("");
-      }
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-      setSearchResults([]);
-      setSearchMessage(
-        "Error fetching search results. Please try again later."
-      );
-    }
-    setLoading(false);
-  };
-
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = (event) => {
     event.preventDefault();
     setSearchParams({ query: searchTerm });
-    await handleSearch(searchTerm);
   };
 
   return (
